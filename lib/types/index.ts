@@ -6,7 +6,8 @@ export interface ApprovalRequest {
     | "invoice_send"
     | "payout"
     | "order"
-    | "subscription";
+    | "subscription"
+    | "other";
   toolName: string;
   toolCallId: string;
   args: Record<string, unknown>;

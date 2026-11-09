@@ -20,6 +20,7 @@ export function ChatInterface() {
     sendMessage,
     stop,
     status,
+    error,
     addToolApprovalResponse,
   } = useChat({ transport });
 
@@ -133,6 +134,19 @@ export function ChatInterface() {
               })}
             </div>
           ))}
+
+          {error && (
+            <div className="flex gap-3">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-red-600 text-white">
+                <span className="text-xs font-bold">!</span>
+              </div>
+              <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-2xl px-4 py-3 max-w-[80%]">
+                <p className="text-sm text-red-800 dark:text-red-300">
+                  {error.message || "Something went wrong. Please try again."}
+                </p>
+              </div>
+            </div>
+          )}
 
           {isLoading &&
             messages[messages.length - 1]?.role !== "assistant" && (
