@@ -10,7 +10,7 @@ AgentPay transforms PayPal from a payment processor into an intelligent financia
 - Natural language interface to all PayPal operations
 - Real-time tool call visualization showing each API call as it happens
 - Multi-step autonomous workflows (e.g., "Create and send an invoice for web design services")
-- Powered by GPT-4o with the official PayPal Agent Toolkit (47 tools across 8 API domains)
+- Powered by Google Gemini AI with the official PayPal Agent Toolkit (47 tools across 8 API domains)
 
 ### Human-in-the-Loop Approval Gates
 - Every money-moving operation requires explicit user approval
@@ -41,7 +41,7 @@ AgentPay transforms PayPal from a payment processor into an intelligent financia
 | Layer | Technology |
 |-------|-----------|
 | Framework | Next.js 16 (App Router) + TypeScript |
-| AI | Vercel AI SDK v7 + OpenAI GPT-4o |
+| AI | Vercel AI SDK v7 + Google Gemini 3.5 Flash |
 | PayPal | `@paypal/agent-toolkit` (official 47-tool AI toolkit) |
 | UI | TailwindCSS v4 + shadcn/ui |
 | Data Grid | AG Grid Community (custom cell renderers) |
@@ -80,57 +80,70 @@ AgentPay transforms PayPal from a payment processor into an intelligent financia
 
 ### Prerequisites
 
-- Node.js 18+
-- PayPal Developer account (sandbox credentials)
-- OpenAI API key
+- **Node.js 18+** (check with `node -v`)
+- **PayPal Developer account** (free — sandbox credentials)
+- **Google AI API key** (free — no billing required)
 
-### Setup
+### Step-by-Step Setup
 
-1. **Clone the repository**
-   ```bash
-   git clone <repo-url>
-   cd agentpay
-   ```
+#### 1. Clone and install
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+```bash
+git clone https://github.com/Hussain-188/AgentPay.git
+cd AgentPay
+npm install
+```
 
-3. **Configure environment variables**
-   ```bash
-   cp .env.example .env.local
-   ```
-   Edit `.env.local` with your credentials:
-   ```
-   PAYPAL_CLIENT_ID=your_paypal_sandbox_client_id
-   PAYPAL_CLIENT_SECRET=your_paypal_sandbox_client_secret
-   OPENAI_API_KEY=your_openai_api_key
-   ```
+#### 2. Get your PayPal sandbox credentials (2 minutes)
 
-   To get PayPal sandbox credentials:
-   - Go to [developer.paypal.com](https://developer.paypal.com)
-   - Create a sandbox application
-   - Copy the Client ID and Secret
+1. Go to [developer.paypal.com](https://developer.paypal.com) and sign in (or create a free account)
+2. Go to **Dashboard > Accounts** — ensure you have a **Business** sandbox account
+3. Go to **Dashboard > Apps & Credentials** (make sure **Sandbox** toggle is selected)
+4. Click **Create App**, name it "AgentPay", link it to your Business sandbox account
+5. Enable these features: **Invoicing**, **Transaction Search**, **Subscriptions**
+6. Copy the **Client ID** and **Secret**
 
-4. **Start the development server**
-   ```bash
-   npm run dev
-   ```
+#### 3. Get your Google AI API key (1 minute)
 
-5. **Open the app**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+1. Go to [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
+2. Click **Create API Key** — it's completely free, no billing required
+3. Copy the key
 
-6. **(Optional) Seed sandbox data**
-   Send a POST request to `/api/seed` to populate your PayPal sandbox with sample products and invoices.
+#### 4. Configure environment variables
+
+```bash
+cp .env.example .env.local
+```
+
+Edit `.env.local` and paste your keys:
+
+```env
+PAYPAL_CLIENT_ID=your_sandbox_client_id_here
+PAYPAL_CLIENT_SECRET=your_sandbox_secret_here
+GOOGLE_GENERATIVE_AI_API_KEY=your_google_ai_key_here
+```
+
+#### 5. Start the app
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+#### 6. Seed demo data (optional)
+
+Click the **"Seed Data"** button in the top-right header to populate your PayPal sandbox with sample products and invoices.
 
 ### Deploy to Vercel
 
-```bash
-npm run build
-```
-
-Deploy via the [Vercel CLI](https://vercel.com/docs/cli) or connect your GitHub repository on [vercel.com](https://vercel.com). Set the three environment variables (`PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `OPENAI_API_KEY`) in your Vercel project settings.
+1. Push your code to GitHub
+2. Go to [vercel.com/new](https://vercel.com/new) and import the repository
+3. Add these environment variables in Vercel project settings:
+   - `PAYPAL_CLIENT_ID`
+   - `PAYPAL_CLIENT_SECRET`
+   - `GOOGLE_GENERATIVE_AI_API_KEY`
+4. Deploy — Vercel auto-detects Next.js and builds it
 
 ## Project Structure
 
@@ -189,6 +202,20 @@ Transaction and invoice data is displayed in AG Grid with custom cell renderers 
 - **Best Use of AG Grid** — Custom cell renderers, sorting, filtering, pagination for financial data
 - **Most Creative** — Conversational financial management with real-time tool visualization
 - **Most Impactful** — Solves real financial busywork for SMBs and freelancers
+
+## Tools Used
+
+| Tool | How It's Used |
+|------|--------------|
+| **PayPal Developer Platform** | Core integration — all financial operations (invoicing, orders, payments, disputes, subscriptions, products, reporting, shipment tracking) go through PayPal's sandbox APIs via the official Agent Toolkit |
+| **PayPal Agent Toolkit** (`@paypal/agent-toolkit`) | Provides 47 pre-built AI tools across 8 API domains that the AI agent calls autonomously |
+| **Google Gemini AI** (Gemini 3.5 Flash) | Powers the conversational AI agent — processes natural language, decides which PayPal tools to call, and generates responses |
+| **Vercel AI SDK v7** | Handles streaming chat, tool calling orchestration, and the human-in-the-loop tool approval pattern |
+| **AG Grid Community** | Interactive financial data tables with custom cell renderers, search, filtering, CSV export, and column pinning |
+| **Next.js 16** | Full-stack framework — App Router, API routes, server-side rendering |
+| **TailwindCSS v4 + shadcn/ui** | UI component system with dark mode support |
+| **Recharts** | Revenue vs. expenses area chart and net income bar chart |
+| **Framer Motion** | Animations for tool call cards and UI transitions |
 
 ## License
 
